@@ -1243,7 +1243,7 @@ ArrowFunctionExpression : ArrowParameterList Arrow StatementOrBlock
                            { AST.JSArrowExpression $1 $2 $3 }
 
 ArrowParameterList :: { AST.JSArrowParameterList }
-ArrowParameterList : PrimaryExpression {%^ toArrowParameterList $1 }
+ArrowParameterList : PrimaryExpression { toArrowParameterList $1 }
                    | LParen RParen
                       { AST.JSParenthesizedArrowParameterList $1 AST.JSLNil $2 }
 
@@ -1568,10 +1568,10 @@ identifierToProperty :: AST.JSExpression -> AST.JSObjectProperty
 identifierToProperty (AST.JSIdentifier a s) = AST.JSPropertyIdentRef a s
 identifierToProperty x = error $ "Cannot convert '" ++ show x ++ "' to a JSObjectProperty."
 
-toArrowParameterList :: AST.JSExpression -> Token -> Alex AST.JSArrowParameterList
-toArrowParameterList (AST.JSIdentifier a s)          = const . return $ AST.JSUnparenthesizedArrowParameter (AST.JSIdentName a s)
-toArrowParameterList (AST.JSExpressionParen lb x rb) = const . return $ AST.JSParenthesizedArrowParameterList lb (commasToCommaList x) rb
-toArrowParameterList _                               = parseError
+toArrowParameterList :: AST.JSExpression -> AST.JSArrowParameterList
+toArrowParameterList (AST.JSIdentifier a s)          = AST.JSUnparenthesizedArrowParameter (AST.JSIdentName a s)
+toArrowParameterList (AST.JSExpressionParen lb x rb) = AST.JSParenthesizedArrowParameterList lb (commasToCommaList x) rb
+toArrowParameterList _                               = error "parse error"
 
 commasToCommaList :: AST.JSExpression -> AST.JSCommaList AST.JSExpression
 commasToCommaList (AST.JSCommaExpression l c r) = AST.JSLCons (commasToCommaList l) c r
