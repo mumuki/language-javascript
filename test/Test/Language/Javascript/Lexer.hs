@@ -52,6 +52,10 @@ testLexer = describe "Lexer:" $ do
     it "spread token" $ do
         testLex "...a" `shouldBe` "[SpreadToken,IdentifierToken 'a']"
 
+    it "identifiers" $ do
+        testLex "a" `shouldBe` "[IdentifierToken 'a']"
+        testLex "(a)" `shouldBe` "[LeftParenToken,IdentifierToken 'a',RightParenToken]"
+
     it "assignment" $ do
         testLex "x=1"       `shouldBe` "[IdentifierToken 'x',SimpleAssignToken,DecimalToken 1]"
         testLex "x=1\ny=2"  `shouldBe` "[IdentifierToken 'x',SimpleAssignToken,DecimalToken 1,WsToken,IdentifierToken 'y',SimpleAssignToken,DecimalToken 2]"

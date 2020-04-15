@@ -28,6 +28,9 @@ testExpressionParser = describe "Parse expressions:" $ do
     it "identifier" $ do
         testExpr "_$"       `shouldBe` "Right (JSAstExpression (JSIdentifier '_$'))"
         testExpr "this_"    `shouldBe` "Right (JSAstExpression (JSIdentifier 'this_'))"
+        testExpr "a"        `shouldBe` "Right (JSAstExpression (JSIdentifier 'a'))"
+        testExpr "(a)"      `shouldBe` "Right (JSAstExpression (JSExpressionParen (JSIdentifier 'a')))"
+
     it "array literal" $ do
         testExpr "[]"       `shouldBe` "Right (JSAstExpression (JSArrayLiteral []))"
         testExpr "[,]"      `shouldBe` "Right (JSAstExpression (JSArrayLiteral [JSComma]))"
